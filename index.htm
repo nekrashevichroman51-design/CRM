@@ -2,16 +2,15 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- Игнорируем любые попытки браузера сжать или отдалить интерфейс -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Executive Web App Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Executive Hub Pro</title>
     <style>
-        /* Базовые стили: убираем прокрутку, фиксируем экран */
+        /* Полный сброс настроек и фиксация экрана */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -19,43 +18,30 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #090514;
+            background-color: #0b071e;
         }
 
+        /* Яркий, контрастный неоновый фон без использования фильтров размытия */
         body {
-            background: radial-gradient(circle at 50% 20%, #150f2e 0%, #050309 100%);
+            background: radial-gradient(circle at 50% 25%, #23154c 0%, #0c071f 60%, #05030d 100%);
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Задний план с сочным неоновым свечением */
-        .bg-glow {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.35;
-            z-index: 1;
-        }
-        .glow-1 { background: #ff007f; top: 15%; left: 10%; }
-        .glow-2 { background: #00f0ff; bottom: 20%; right: 10%; }
-
-        /* Контейнер приложения: растягивается ровно на экран телефона */
-        .app-container {
-            position: relative;
-            z-index: 10;
+        /* Контейнер приложения во весь экран смартфона */
+        .app-shell {
             width: 100vw;
             height: 100vh;
-            max-width: 450px; /* Для десктопа, на мобильном займет 100% */
+            max-width: 460px;
             padding: 24px 20px;
             display: flex;
             flex-direction: column;
-            /* Безопасная замена glassmorphism — сочный полупрозрачный темный фон */
-            background: rgba(15, 11, 28, 0.75);
-            border-left: 1px solid rgba(255, 255, 255, 0.06);
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(10, 6, 26, 0.65);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 10;
         }
 
         /* Шапка */
@@ -63,43 +49,41 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 24px;
+            margin-bottom: 24px;
         }
 
         .app-title {
             font-size: 22px;
             font-weight: 700;
             color: #ffffff;
-            background: linear-gradient(45deg, #ffffff, #b4b2ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
         }
 
         .status-badge {
-            background: rgba(0, 240, 255, 0.12);
-            border: 1px solid rgba(0, 240, 255, 0.4);
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid #00f0ff;
             color: #00f0ff;
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
 
-        /* Крупные мобильные Табы (Высота 52px под уверенное нажатие) */
-        .tabs {
+        /* Контрастные и четкие Табы (Высота 50px под палец) */
+        .tabs-nav {
             display: flex;
-            background: rgba(0, 0, 0, 0.45);
+            background: #05030d;
             padding: 4px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             margin-bottom: 24px;
-            height: 52px;
-            flex-shrink: 0;
+            height: 50px;
         }
 
-        .tab-btn {
+        .tab-trigger {
             flex: 1;
             background: transparent;
             border: none;
@@ -107,59 +91,64 @@
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            border-radius: 12px;
+            border-radius: 10px;
             outline: none;
-            transition: background 0.2s ease, color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
-        .tab-btn.active {
-            background: rgba(255, 255, 255, 0.12);
+        /* Активный таб теперь ярко выделяется */
+        .tab-trigger.active {
+            background: #23154c;
             color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Контентные блоки */
-        .tab-content {
+        .panel-content {
             display: none;
             flex-direction: column;
             gap: 16px;
             flex-grow: 1;
         }
 
-        .tab-content.active {
+        .panel-content.active {
             display: flex;
         }
 
-        /* Бизнес-метрики */
-        .metric-card {
+        /* Карточки бизнес-метрик */
+        .card-metric {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 18px;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .metric-info h4 {
+        .metric-details h4 {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.4);
             margin-bottom: 6px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .metric-value {
+        .metric-num {
             font-size: 24px;
             font-weight: 700;
             color: #ffffff;
         }
 
-        .progress-ring-container {
+        .ring-holder {
             position: relative;
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
         }
 
-        .progress-text {
+        .ring-text {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -168,19 +157,17 @@
             font-weight: 700;
         }
 
-        /* Блок задач */
-        .task-input-wrapper {
+        /* Таск-менеджер */
+        .input-bar {
             display: flex;
             gap: 8px;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 16px;
+            background: #05030d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
             padding: 6px;
-            flex-shrink: 0;
         }
 
-        /* Шрифт 16px полностью убирает баг "дёргания" экрана на Android при вызове клавиатуры */
-        .task-input {
+        .input-bar input {
             flex: 1;
             background: transparent;
             border: none;
@@ -190,23 +177,23 @@
             padding-left: 12px;
         }
 
-        .task-input::placeholder {
-            color: rgba(255, 255, 255, 0.25);
+        .input-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        .add-task-btn {
+        .btn-add {
             background: linear-gradient(135deg, #00f0ff, #7000ff);
             border: none;
             color: #ffffff;
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             font-size: 22px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .tasks-container {
+        .tasks-scroll {
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -214,21 +201,21 @@
             overflow-y: auto;
         }
 
-        .task-item {
+        .item-task {
             display: flex;
             align-items: center;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 16px;
-            border-radius: 16px;
+            border-radius: 14px;
             cursor: pointer;
         }
 
-        .checkbox-custom {
-            width: 22px;
-            height: 22px;
+        .box-check {
+            width: 20px;
+            height: 20px;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
+            border-radius: 5px;
             margin-right: 14px;
             display: flex;
             justify-content: center;
@@ -236,24 +223,25 @@
             flex-shrink: 0;
         }
 
-        .task-item.completed .checkbox-custom {
+        .item-task.completed .box-check {
             background: #ff007f;
             border-color: #ff007f;
+            box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
         }
 
-        .checkbox-custom::after {
+        .box-check::after {
             content: '✓';
-            color: #ffffff;
-            font-size: 13px;
+            color: white;
+            font-size: 12px;
             display: none;
             font-weight: bold;
         }
 
-        .task-item.completed .checkbox-custom::after {
+        .item-task.completed .box-check::after {
             display: block;
         }
 
-        .task-text {
+        .text-task {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.9);
             white-space: nowrap;
@@ -261,13 +249,13 @@
             text-overflow: ellipsis;
         }
 
-        .task-item.completed .task-text {
+        .item-task.completed .text-task {
             text-decoration: line-through;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Главная кнопка действия */
-        .action-btn {
+        /* Главная кнопка синхронизации */
+        .btn-sync {
             width: 100%;
             background: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%);
             border: none;
@@ -278,54 +266,64 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(112, 0, 255, 0.3);
-            margin-top: auto; /* Жестко прижимает кнопку к низу экрана */
+            margin-top: auto;
             flex-shrink: 0;
         }
 
-        .action-btn:active {
+        .btn-sync:active {
             transform: scale(0.98);
-            opacity: 0.95;
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
-    <!-- Стабильный фон -->
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
-
-    <!-- Мобильный контейнер 1:1 к экрану -->
-    <div class="app-container">
+    <div class="app-shell">
         <!-- Шапка -->
         <div class="app-header">
             <div class="app-title">Performance Hub</div>
-            <div class="status-badge" id="live-indicator">Live</div>
+            <div class="status-badge" id="indicator">Live</div>
         </div>
 
-        <!-- Переключатели вкладок -->
-        <div class="tabs">
-            <button class="tab-btn active" id="btn-metrics">Метрики бизнеса</button>
-            <button class="tab-btn" id="btn-tasks">Задачи команды</button>
+        <!-- Навигация -->
+        <div class="tabs-nav">
+            <button class="tab-trigger active" id="trigger-metrics">Метрики бизнеса</button>
+            <button class="tab-trigger" id="trigger-tasks">Задачи команды</button>
         </div>
 
-        <!-- Панель 1: Метрики -->
-        <div class="tab-content active" id="content-metrics">
-            <div class="metric-card">
-                <div class="metric-info">
+        <!-- Метрики -->
+        <div class="panel-content active" id="panel-metrics">
+            <div class="card-metric">
+                <div class="metric-details">
                     <h4>Маржинальный доход (P&L)</h4>
-                    <div class="metric-value" id="pnl-text">34,500 BYN</div>
+                    <div class="metric-num" id="pnl-display">34,500 BYN</div>
                 </div>
-                <div class="progress-ring-container">
-                    <svg width="48" height="48">
-                        <circle cx="24" cy="24" r="20" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
-                        <circle cx="24" cy="24" r="20" fill="transparent" stroke="#00f0ff" stroke-width="3" stroke-dasharray="125.6" stroke-dashoffset="31.4"/>
+                <div class="ring-holder">
+                    <svg width="52" height="52">
+                        <circle cx="26" cy="26" r="22" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3.5"/>
+                        <circle cx="26" cy="26" r="22" fill="transparent" stroke="#00f0ff" stroke-width="3.5" stroke-dasharray="138.2" stroke-dashoffset="34.5"/>
                     </svg>
-                    <div class="progress-text" style="color: #00f0ff;">75%</div>
+                    <div class="ring-text" style="color: #00f0ff;">75%</div>
                 </div>
             </div>
 
-            <div class="metric-card">
-                <div class="metric-info">
-                    <h4>Эффективность команды (KPI)</h4>
-                    <div class="metric-value">92.4%</div>
+            <div class="card-metric">
+                <div class="metric-details">
+                    <h4>Эффективность (KPI)</h4>
+                    <div class="metric-num">92.4%</div>
                 </div>
+                <div class="ring-holder">
+                    <svg width="52" height="52">
+                        <circle cx="26" cy="26" r="22" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3.5"/>
+                        <circle cx="26" cy="26" r="22" fill="transparent" stroke="#ff007f" stroke-width="3.5" stroke-dasharray="138.2" stroke-dashoffset="11.0"/>
+                    </svg>
+                    <div class="ring-text" style="color: #ff007f;">92%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Задачи -->
+        <div class="panel-content" id="panel-tasks">
+            <div class="input-bar">
+                <input type="text" id="task-entry" placeholder="Новое поручение..." maxlength="35">
+                <button class="btn-add" id="btn-add-item">+</button>
