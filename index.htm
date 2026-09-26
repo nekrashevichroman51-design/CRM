@@ -2,130 +2,126 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed Executive Widget</title>
+    <!-- Жесткая фиксация масштаба 1:1, запрещающая браузеру отдалять страницу -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Executive Web App</title>
     <style>
-        /* Базовый сброс стилей */
+        /* Блокировка прокрутки и адаптация под экран смартфона */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #090514;
         }
 
         body {
-            background: radial-gradient(circle at 50% 30%, #171030 0%, #05030a 100%);
-            min-height: 100vh;
+            background: radial-gradient(circle at 50% 20%, #1c133a 0%, #06040b 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            overflow: hidden;
-            position: relative;
         }
 
-        /* Декоративные неоновые сферы на фоне */
-        body::before, body::after {
-            content: '';
+        /* Декоративные неоновые пятна на фоне */
+        .bg-glow {
             position: absolute;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            filter: blur(90px);
-            z-index: 0;
-            opacity: 0.45;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: 1;
         }
-        body::before {
-            width: 250px;
-            height: 250px;
-            background: #ff007f;
-            top: 20%;
-            left: 15%;
-        }
-        body::after {
-            width: 300px;
-            height: 300px;
-            background: #00f0ff;
-            bottom: 20%;
-            right: 15%;
-        }
+        .glow-1 { background: #ff007f; top: 10%; left: 10%; }
+        .glow-2 { background: #00f0ff; bottom: 15%; right: 10%; }
 
-        /* Надежный Glassmorphism контейнер с четкими размерами */
-        .widget {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 360px; /* Идеальный размер под любой смартфон */
-            min-height: 380px;
-            padding: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        /* Интерфейс приложения растягивается на весь экран смартфона */
+        .app-container {
+            position: relative;
             z-index: 10;
-            color: #ffffff;
+            width: 100%;
+            height: 100%;
+            max-width: 480px; /* Ограничение для ПК, на телефоне будет во весь экран */
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Шапка */
-        .widget-header {
+        /* Шапка с крупными элементами */
+        .app-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            padding-bottom: 20px;
         }
 
-        .widget-title {
-            font-size: 18px;
-            font-weight: 600;
+        .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
             background: linear-gradient(45deg, #ffffff, #b4b2ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .status-badge {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: rgba(0, 240, 255, 0.12);
+            border: 1px solid rgba(0, 240, 255, 0.4);
             color: #00f0ff;
-            padding: 4px 10px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Стабильные Табы */
+        /* Крупные мобильные Табы (высота 50px под палец) */
         .tabs {
             display: flex;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
+            height: 50px;
         }
 
         .tab-btn {
             flex: 1;
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.5);
-            padding: 10px 0;
-            font-size: 13px;
-            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 12px;
             outline: none;
+            transition: all 0.2s ease;
         }
 
         .tab-btn.active {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
             color: #ffffff;
         }
 
-        /* Контентные панели */
+        /* Панели контента занимают всю оставшуюся высоту */
         .tab-content {
             display: none;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
             flex-grow: 1;
         }
 
@@ -133,33 +129,34 @@
             display: flex;
         }
 
-        /* Метрики бизнеса */
+        /* Карточки метрик бизнеса */
         .metric-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            padding: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .metric-info h4 {
-            font-size: 12px;
+            font-size: 13px;
             color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 2px;
-            font-weight: 400;
+            margin-bottom: 4px;
+            font-weight: 500;
         }
 
         .metric-value {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 700;
+            color: #ffffff;
         }
 
         .progress-ring-container {
             position: relative;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
         }
 
         .progress-text {
@@ -167,69 +164,73 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
         }
 
-        /* Таск-менеджер */
+        /* Мобильный таск-менеджер */
         .task-input-wrapper {
             display: flex;
-            gap: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 4px;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 6px;
         }
 
+        /* Шрифт 16px предотвращает автоматический зум экрана на iOS/Android при фокусе */
         .task-input {
             flex: 1;
             background: transparent;
             border: none;
             outline: none;
             color: #ffffff;
-            font-size: 13px;
-            padding-left: 8px;
+            font-size: 16px;
+            padding-left: 10px;
         }
 
         .task-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.25);
         }
 
         .add-task-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #00f0ff, #7000ff);
             border: none;
             color: #ffffff;
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            font-size: 16px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
         }
 
         .tasks-container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 140px;
+            gap: 10px;
+            flex-grow: 1;
             overflow-y: auto;
+            padding-bottom: 20px;
         }
 
+        /* Крупные строки задач (высота адаптирована под палец) */
         .task-item {
             display: flex;
             align-items: center;
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 10px 12px;
-            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 14px;
             cursor: pointer;
         }
 
         .checkbox-custom {
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            margin-right: 10px;
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            margin-right: 14px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -244,8 +245,9 @@
         .checkbox-custom::after {
             content: '✓';
             color: #ffffff;
-            font-size: 10px;
+            font-size: 12px;
             display: none;
+            font-weight: bold;
         }
 
         .task-item.completed .checkbox-custom::after {
@@ -253,8 +255,8 @@
         }
 
         .task-text {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -265,28 +267,38 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Главная кнопка внизу */
+        /* Фиксированная кнопка в самом низу экрана */
         .action-btn {
             width: 100%;
             background: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%);
             border: none;
             color: #ffffff;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 16px;
-            box-shadow: 0 4px 15px rgba(112, 0, 255, 0.2);
+            box-shadow: 0 6px 20px rgba(112, 0, 255, 0.3);
+            margin-top: auto; /* Прижимает кнопку к низу экрана */
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
-    <div class="widget">
+    <!-- Декоративный фон -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <!-- Контейнер во весь экран -->
+    <div class="app-container">
         <!-- Шапка -->
-        <div class="widget-header">
-            <div class="widget-title">Performance Hub</div>
+        <div class="app-header">
+            <div class="app-title">Performance Hub</div>
             <div class="status-badge" id="live-indicator">Live</div>
         </div>
 
@@ -296,7 +308,7 @@
             <button class="tab-btn" id="btn-tasks">Задачи команды</button>
         </div>
 
-        <!-- Контент 1: Метрики -->
+        <!-- Метрики -->
         <div class="tab-content active" id="content-metrics">
             <div class="metric-card">
                 <div class="metric-info">
@@ -304,9 +316,9 @@
                     <div class="metric-value" id="pnl-text">34,500 BYN</div>
                 </div>
                 <div class="progress-ring-container">
-                    <svg width="44" height="44">
-                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
-                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="#00f0ff" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="28"/>
+                    <svg width="48" height="48">
+                        <circle cx="24" cy="24" r="20" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                        <circle cx="24" cy="24" r="20" fill="transparent" stroke="#00f0ff" stroke-width="3" stroke-dasharray="125.6" stroke-dashoffset="31.4"/>
                     </svg>
                     <div class="progress-text" style="color: #00f0ff;">75%</div>
                 </div>
@@ -316,18 +328,3 @@
                 <div class="metric-info">
                     <h4>Эффективность команды (KPI)</h4>
                     <div class="metric-value">92.4%</div>
-                </div>
-                <div class="progress-ring-container">
-                    <svg width="44" height="44">
-                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
-                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="#ff007f" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="10"/>
-                    </svg>
-                    <div class="progress-text" style="color: #ff007f;">92%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Контент 2: Задачи -->
-        <div class="tab-content" id="content-tasks">
-            <div class="task-input-wrapper">
-                <input type="text" class="task-input" id="task-input" placeholder="Новая задача..." maxlength="40">
