@@ -2,95 +2,81 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Executive Pro Dashboard Widget</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Executive Widget</title>
     <style>
-        /* Обнуление и базовая конфигурация */
+        /* Базовый сброс стилей */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Убираем синий блик при тапе на смартфонах */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: radial-gradient(circle at 50% 30%, #1a1235 0%, #07040e 100%);
+            background: radial-gradient(circle at 50% 30%, #171030 0%, #05030a 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 16px;
-            overflow-x: hidden;
+            padding: 20px;
+            overflow: hidden;
             position: relative;
         }
 
-        /* Сочные анимированные неоновые сферы на фоне */
+        /* Декоративные неоновые сферы на фоне */
         body::before, body::after {
             content: '';
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(90px);
             z-index: 0;
-            opacity: 0.5;
+            opacity: 0.45;
         }
         body::before {
-            width: 260px;
-            height: 260px;
+            width: 250px;
+            height: 250px;
             background: #ff007f;
-            top: 15%;
+            top: 20%;
             left: 15%;
-            animation: floatCircle 12s ease-in-out infinite alternate;
         }
         body::after {
-            width: 320px;
-            height: 320px;
+            width: 300px;
+            height: 300px;
             background: #00f0ff;
-            bottom: 15%;
+            bottom: 20%;
             right: 15%;
-            animation: floatCircle 15s ease-in-out infinite alternate-reverse;
         }
 
-        @keyframes floatCircle {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-30px) scale(1.08); }
-        }
-
-        /* Адаптивный Glassmorphism контейнер */
+        /* Надежный Glassmorphism контейнер с четкими размерами */
         .widget {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
             border-radius: 24px;
             width: 100%;
-            max-width: 400px;
+            max-width: 360px; /* Идеальный размер под любой смартфон */
+            min-height: 380px;
             padding: 20px;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             z-index: 10;
             color: #ffffff;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .widget:hover, .widget:active {
-            border-color: rgba(255, 255, 255, 0.14);
-            box-shadow: 0 24px 60px rgba(0, 240, 255, 0.1);
-        }
-
-        /* Шапка виджета */
+        /* Шапка */
         .widget-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 16px;
         }
 
         .widget-title {
             font-size: 18px;
             font-weight: 600;
-            letter-spacing: 0.3px;
             background: linear-gradient(45deg, #ffffff, #b4b2ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -105,16 +91,15 @@
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
         }
 
-        /* Мобильные Табы (Переключатели) */
+        /* Стабильные Табы */
         .tabs {
             display: flex;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.3);
             padding: 4px;
-            border-radius: 14px;
+            border-radius: 12px;
+            margin-bottom: 16px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
@@ -127,61 +112,54 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            outline: none;
         }
 
         .tab-btn.active {
-            background: rgba(255, 255, 255, 0.09);
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* Контентные панели */
         .tab-content {
             display: none;
             flex-direction: column;
-            gap: 12px;
-            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            gap: 10px;
+            flex-grow: 1;
         }
 
         .tab-content.active {
             display: flex;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Вкладка 1: Метрики бизнеса */
+        /* Метрики бизнеса */
         .metric-card {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .metric-info h4 {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.45);
-            margin-bottom: 4px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 2px;
             font-weight: 400;
         }
 
         .metric-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            color: #ffffff;
         }
 
         .progress-ring-container {
             position: relative;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
         }
 
         .progress-text {
@@ -189,18 +167,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
         }
 
-        /* Вкладка 2: Интерактивный таск-менеджер */
+        /* Таск-менеджер */
         .task-input-wrapper {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 4px 4px 4px 12px;
+            border-radius: 10px;
+            padding: 4px;
         }
 
         .task-input {
@@ -209,7 +187,8 @@
             border: none;
             outline: none;
             color: #ffffff;
-            font-size: 14px;
+            font-size: 13px;
+            padding-left: 8px;
         }
 
         .task-input::placeholder {
@@ -220,38 +199,19 @@
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #ffffff;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-size: 16px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .add-task-btn:active {
-            background: rgba(255, 255, 255, 0.2);
         }
 
         .tasks-container {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 180px;
+            max-height: 140px;
             overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        /* Скроллбар для списка задач */
-        .tasks-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .tasks-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
         }
 
         .task-item {
@@ -259,37 +219,33 @@
             align-items: center;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 12px 14px;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
         }
 
         .checkbox-custom {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            border-radius: 5px;
-            margin-right: 12px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-right: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
-            transition: all 0.2s ease;
         }
 
         .task-item.completed .checkbox-custom {
             background: #ff007f;
             border-color: #ff007f;
-            box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
         }
 
         .checkbox-custom::after {
             content: '✓';
             color: #ffffff;
-            font-size: 11px;
+            font-size: 10px;
             display: none;
-            font-weight: bold;
         }
 
         .task-item.completed .checkbox-custom::after {
@@ -297,9 +253,8 @@
         }
 
         .task-text {
-            font-size: 13.5px;
-            color: rgba(255, 255, 255, 0.85);
-            transition: all 0.2s ease;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -307,31 +262,22 @@
 
         .task-item.completed .task-text {
             text-decoration: line-through;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Главная кнопка действия */
+        /* Главная кнопка внизу */
         .action-btn {
             width: 100%;
             background: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%);
             border: none;
             color: #ffffff;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(112, 0, 255, 0.25);
-            transition: all 0.2s ease;
-        }
-
-        .action-btn:shadow {
-            box-shadow: 0 6px 24px rgba(0, 240, 255, 0.35);
-        }
-
-        .action-btn:active {
-            transform: scale(0.98);
-            opacity: 0.95;
+            margin-top: 16px;
+            box-shadow: 0 4px 15px rgba(112, 0, 255, 0.2);
         }
     </style>
 </head>
@@ -344,5 +290,44 @@
             <div class="status-badge" id="live-indicator">Live</div>
         </div>
 
-        <!-- Переключатели -->
+        <!-- Табы -->
         <div class="tabs">
+            <button class="tab-btn active" id="btn-metrics">Метрики бизнеса</button>
+            <button class="tab-btn" id="btn-tasks">Задачи команды</button>
+        </div>
+
+        <!-- Контент 1: Метрики -->
+        <div class="tab-content active" id="content-metrics">
+            <div class="metric-card">
+                <div class="metric-info">
+                    <h4>Маржинальный доход (P&L)</h4>
+                    <div class="metric-value" id="pnl-text">34,500 BYN</div>
+                </div>
+                <div class="progress-ring-container">
+                    <svg width="44" height="44">
+                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="#00f0ff" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="28"/>
+                    </svg>
+                    <div class="progress-text" style="color: #00f0ff;">75%</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-info">
+                    <h4>Эффективность команды (KPI)</h4>
+                    <div class="metric-value">92.4%</div>
+                </div>
+                <div class="progress-ring-container">
+                    <svg width="44" height="44">
+                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                        <circle cx="22" cy="22" r="18" fill="transparent" stroke="#ff007f" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="10"/>
+                    </svg>
+                    <div class="progress-text" style="color: #ff007f;">92%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контент 2: Задачи -->
+        <div class="tab-content" id="content-tasks">
+            <div class="task-input-wrapper">
+                <input type="text" class="task-input" id="task-input" placeholder="Новая задача..." maxlength="40">
