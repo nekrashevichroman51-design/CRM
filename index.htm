@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Glassmorphism Widget</title>
+    <style>
+        /* Базовые стили и сочный футуристичный фон */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #251c4a 0%, #0b071a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Декоративные размытые неоновые сферы на фоне для эффекта стекла */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.6;
+        }
+        body::before {
+            width: 300px;
+            height: 300px;
+            background: #ff007f;
+            top: 20%;
+            left: 30%;
+            animation: float 8s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 400px;
+            height: 400px;
+            background: #00f0ff;
+            bottom: 15%;
+            right: 25%;
+            animation: float 10s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-40px) scale(1.1); }
+        }
+
+        /* Контейнер виджета (Эффект Glassmorphism) */
+        .widget {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            width: 420px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            color: #ffffff;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 240, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Шапка виджета */
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .widget-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #fff, #a3a1ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #00f0ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Плавные интуитивные Табы (Переключатели) */
+        .tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 0;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Контентные панели */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Стили вкладки Метрик (Бизнес показатели) */
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-info h4 {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Индикатор прогресса в виде сочного кольца */
+        .progress-ring-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Список задач (Вкладка Tasks) */
+        .task-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 14px 16px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 240, 255, 0.2);
+        }
+
+        .checkbox-custom {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            margin-right: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .task-item.completed .checkbox-custom {
+            background: #ff007f;
+            border-color: #ff007f;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        .checkbox-custom::after {
+            content: '✓';
+            color: white;
+            font-size: 11px;
+            display: none;
+        }
+
+        .task-item.completed .checkbox-custom::after {
+            display: block;
+        }
+
+        .task-text {
+            font-size: 14px;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Интерактивная кнопка действия */
+        .action-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.4);
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Главный контейнер виджета -->
+    <div class="widget">
+        
+        <!-- Шапка -->
+        <div class="widget-header">
+            <div class="widget-title">Performance Hub</div>
+            <div class="status-badge" id="live-indicator">Live</div>
+        </div>
+
+        <!-- Переключатели вкладок -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="metrics">Метрики бизнеса</button>
+            <button class="tab-btn" data-tab="tasks">Задачи команды</button>
+        </div>
+
+        <!-- ВКЛАДКА 1: Метрики бизнеса -->
+        <div class="tab-content active" id="metrics">
+            <div class="metric-card">
+                <div class="metric-info">
+                    <h4>Маржинальный доход (P&L)</h4>
+                    <div class="metric-value">34,500 BYN</div>
+                </div>
+                <div class="progress-ring-container">
+                    <svg width="50" height="50">
+                        <circle cx="25" cy="25" r="20" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="4"/>
+                        <circle cx="25" cy="25" r="20" fill="transparent" stroke="#00f0ff" stroke-width="4" 
+                                stroke-dasharray="125.6" stroke-dashoffset="31.4"/>
+                    </svg>
+                    <div class="progress-text" style="color: #00f0ff;">75%</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-info">
+                    <h4>Эффективность команды (KPI)</h4>
+                    <div class="metric-value">92.4%</div>
+                </div>
+                <div class="progress-ring-container">
+                    <svg width="50" height="50">
+                        <circle cx="25" cy="25" r="20" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="4"/>
+                        <circle cx="25" cy="25" r="20" fill="transparent" stroke="#ff007f" stroke-width="4" 
+                                stroke-dasharray="125.6" stroke-dashoffset="10.0"/>
+                    </svg>
